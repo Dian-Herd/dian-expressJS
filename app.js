@@ -1,16 +1,20 @@
-const express = require('express')
-const app = express()
-const userRouter = require('./router/users')
+const express = require('express');
+const app = express();
+const productRouter = require('./app/product/routes');
+const logger = require('morgan');
 
-app.use(express.json())
-app.use(express.urlencoded({extended : true}))
+app.use(logger('dev'));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
-app.get('/', (req, res)=>{
-    res.send('<h1>Home</h1>')
+app.use('/api/v1', productRouter);
+app.use((req, res, next) => {
+    res.status(404);
+    res.send({
+        status: 'failed',
+        message: 'page ' + req.originalUrl + ' Not Found'
+    })
 })
-app.get('/about', (req, res)=>{
-    res.send('<h1>About</h1>')
-})
-app.use(userRouter)
 
-app.listen(process.env.PORT || 5000)
+app.listen(3000, ()=>console.log('server: http://localhost:3000'));
+// app.listen(process.env.PORT || 5000)
