@@ -25,6 +25,21 @@ const index = async (req, res)=>{
     }
 }
 
+const view = async (req, res)=>{
+    const id = req.params.id;
+    try{
+        await Product.sync();
+        const result = await Product.findAll({
+            where: {
+                id : id
+            }
+        });
+        res.send(result);
+    } catch(e){
+        res.send(e);
+    }
+}
+
 const store = async (req, res)=>{
     const {users_id, name, price, stock, status} = req.body;
     const image = req.file;
@@ -110,6 +125,7 @@ const destroy = async (req, res)=>{
 
 module.exports = {
     index,
+    view,
     store,
     update,
     destroy
